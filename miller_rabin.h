@@ -9,7 +9,7 @@
 #include <cstdint>
 
 /**
- * @file miller_rabin_cuda.h
+ * @file miller_rabin.h
  *
  * @brief This module provides functions for performing the deterministic Miller-Rabin primality test.
  *        This version of the test is deterministic for all unsigned 64-bit integers.
