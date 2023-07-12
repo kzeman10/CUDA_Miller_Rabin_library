@@ -11,3 +11,5 @@ See the example_run folder with prepared script.
 ## Benchmark
 
 This implementation tested all primes in unsigned int 32 range (203 million primes) in 3 seconds on Nvidia RTX 3090.
+
+![Results](./benchmark/data/results.svg)

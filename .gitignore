@@ -5,3 +5,5 @@
 *.cubin
 *.fatbin
 *.o
+benchmark/benchmark.out
+benchmark/data/primes_2**32.csv
