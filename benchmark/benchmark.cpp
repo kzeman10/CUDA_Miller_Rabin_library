@@ -75,8 +75,7 @@ int main() {
     start_time = clock();
 
     std::cout << "about to test " << size << " primes" << " on a CPU" << std::endl;
-    // for (size_t i = 0; i < size; i++) {
-    for (size_t i = 0; i < 1000000; i++) {
+    for (size_t i = 0; i < size; i++) {
         mpz_set_ui(x, primes[i]);
         char is_prime = mpz_millerrabin(x, 13);
         if (is_prime == 0 && primes[i] != 2) {
