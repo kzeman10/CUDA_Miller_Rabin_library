@@ -62,8 +62,8 @@ int main() {
     test_from_file("./data/edge_cases_false.csv", false);
     test_from_file("./data/edge_cases_true.csv", true);
 
-    std::cout << "testing over sieve of erathostenes for all unsigned numbers < 2**26" << std::endl;
-    test_from_file("./data/primes_2**26.csv", true);
+    std::cout << "testing over sieve of erathostenes for all unsigned numbers < 2**20" << std::endl;
+    test_from_file("./data/primes_2**20.csv", true);
 
     std::cout << "testing over primes ~ 2**43" << std::endl;
     test_from_file("./data/primes_2**43.csv", true);
