@@ -57,18 +57,20 @@ __device__ bool deviceMillerRabin(uint64_t n, bool quickCheck) {
             }
         }
     }
+
+    // Check if n is divisible by 2
+    if (n % 2 == 0) {
+        return false;
+    }
+
+    // Check if n is divisible by any of the predefined bases in case of quick check
     if (quickCheck) {
-        for (int i = 0; i < 13; i++) {
+        for (int i = 1; i < 13; i++) {
             if (n % BASE[i] == 0) {
                 return false;
             }
         }
 
-    }
-
-    // Check if n is divisible by 2
-    if (n % 2 == 0) {
-        return false;
     }
 
     // Compute n - 1 = 2^s * d
