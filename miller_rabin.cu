@@ -1,5 +1,6 @@
 #include "miller_rabin.h"
 
+
 /**
  * @brief Performs the square-and-multiply algorithm to calculate a^b % m.
  *
@@ -30,6 +31,7 @@ __device__ uint64_t squareAndMultiply(uint64_t a, uint64_t b, uint64_t m) {
     return result;
 }
 
+
 /**
  * @brief Performs the Miller-Rabin primality test to check if a number is probably prime.
  *
@@ -40,7 +42,7 @@ __device__ uint64_t squareAndMultiply(uint64_t a, uint64_t b, uint64_t m) {
  *
  * @return true if n is probably prime, false if n is composite.
  */
-__device__ bool deviceMillerRabin(uint64_t n) {
+__device__ bool deviceMillerRabin(uint64_t n, bool quickCheck) {
     // Predefined bases for uint64_t
     uint8_t BASE[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41};
 
@@ -54,6 +56,14 @@ __device__ bool deviceMillerRabin(uint64_t n) {
                 return true;
             }
         }
+    }
+    if (quickCheck) {
+        for (int i = 0; i < 13; i++) {
+            if (n % BASE[i] == 0) {
+                return false;
+            }
+        }
+
     }
 
     // Check if n is divisible by 2
@@ -108,6 +118,7 @@ __device__ bool deviceMillerRabin(uint64_t n) {
     return true;
 }
 
+
 /**
  * @brief CUDA kernel function for parallel prime testing using the Miller-Rabin algorithm.
  *
@@ -117,18 +128,31 @@ __device__ bool deviceMillerRabin(uint64_t n) {
  * @param primes A pointer to the array of numbers to be tested for primality.
  * @param size The size of the array.
  */
-__global__ void kernel(bool* boolArray, const uint64_t* primes, const uint64_t size) {
+__global__ void kernel(bool* boolArray, const uint64_t* primes, const uint64_t size, bool quickCheck) {
     // Calculate the global thread ID
     uint64_t tid = blockIdx.x * blockDim.x + threadIdx.x;
 
     // Check if the thread ID is within the valid range
     if (tid < size) {
         // Test the primality of the number at the current thread ID
-        boolArray[tid] = deviceMillerRabin(primes[tid]);
+        boolArray[tid] = deviceMillerRabin(primes[tid], quickCheck);
     }
 }
 
-bool* millerRabin(uint64_t* numbers, size_t size) {
+
+/**
+ * @brief Tests whether each number in the given array of numbers is prime.
+ *
+ * This function utilizes CUDA to parallelize the prime testing on the GPU.
+ *
+ * @param numbers A pointer to an array of numbers to be tested for primality.
+ * @param size The size of the array.
+ * @param quickCheck If true, the test will check modulo with base primes before running full test.
+ *
+ * @return A pointer to a bool array indicating whether each number is prime.
+ *         The caller is responsible for freeing the memory allocated for the bool array.
+ */
+bool* millerRabin(uint64_t* numbers, size_t size, bool quickCheck) {
     uint64_t* d_numbers;   // Device memory pointer for numbers
     bool* d_boolArray;      // Device memory pointer for bool array
 
@@ -147,7 +171,7 @@ bool* millerRabin(uint64_t* numbers, size_t size) {
     uint64_t gridSize = (size + BLOCKSIZE - 1) / BLOCKSIZE;
 
     // Launch the CUDA kernel to test the primality of numbers
-    kernel<<<gridSize, BLOCKSIZE>>>(d_boolArray, d_numbers, size);
+    kernel<<<gridSize, BLOCKSIZE>>>(d_boolArray, d_numbers, size, quickCheck);
 
     // Copy the bool array from device to host memory
     cudaMemcpy(boolArray, d_boolArray, sizeof(bool) * size, cudaMemcpyDeviceToHost);

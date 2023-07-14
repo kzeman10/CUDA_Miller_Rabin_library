@@ -25,10 +25,11 @@
  *
  * @param numbers A pointer to an array of numbers to be tested for primality.
  * @param size The size of the array.
+ * @param quickCheck If true, the test will check modulo with base primes before running full test.
  *
  * @return A pointer to a bool array indicating whether each number is prime.
  *         The caller is responsible for freeing the memory allocated for the bool array.
  */
-bool* millerRabin(uint64_t* numbers, size_t size);
+bool* millerRabin(uint64_t* numbers, size_t size, bool quickCheck = false);
 
 #endif  // MILLER_RABIN_H
