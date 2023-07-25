@@ -1,9 +1,5 @@
-*.i
-*.ii
-*.gpu
-*.ptx
-*.cubin
-*.fatbin
 *.o
+*.out
 benchmark/benchmark.out
 benchmark/data/primes_2**32.csv
+python_benchmark/data/primes_2**32.csv
