@@ -130,9 +130,9 @@ __device__ bool deviceMillerRabin(uint64_t n, bool quickCheck) {
  * @param primes A pointer to the array of numbers to be tested for primality.
  * @param size The size of the array.
  */
-__global__ void kernel(bool* boolArray, const uint64_t* primes, const uint64_t size, bool quickCheck) {
+__global__ void kernel(bool* boolArray, const uint64_t* primes, const size_t size, bool quickCheck) {
     // Calculate the global thread ID
-    uint64_t tid = blockIdx.x * blockDim.x + threadIdx.x;
+    size_t tid = blockIdx.x * blockDim.x + threadIdx.x;
 
     // Check if the thread ID is within the valid range
     if (tid < size) {
@@ -169,8 +169,8 @@ bool* millerRabin(uint64_t* numbers, size_t size, bool quickCheck) {
     bool* boolArray = (bool*)malloc(sizeof(bool) * size);
 
     // Set the block size for CUDA kernel execution and calculate the grid size
-    constexpr uint64_t BLOCKSIZE = 256;
-    uint64_t gridSize = (size + BLOCKSIZE - 1) / BLOCKSIZE;
+    constexpr size_t BLOCKSIZE = 256;
+    size_t gridSize = (size + BLOCKSIZE - 1) / BLOCKSIZE;
 
     // Launch the CUDA kernel to test the primality of numbers
     kernel<<<gridSize, BLOCKSIZE>>>(d_boolArray, d_numbers, size, quickCheck);
