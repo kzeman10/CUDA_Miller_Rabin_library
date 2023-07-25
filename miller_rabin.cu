@@ -48,14 +48,12 @@ __device__ bool deviceMillerRabin(uint64_t n, bool quickCheck) {
 
     // Check if n is a small prime number
     if (n <= 41) {
-        if (n <= 1) {
-            return false;
-        }
         for (int i = 0; i < 13; i++) {
             if (n == BASE[i]) {
                 return true;
             }
         }
+        return false;
     }
 
     // Check if n is divisible by 2
