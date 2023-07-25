@@ -42,7 +42,6 @@ def miller_rabin(n : nb.uint32) -> nb.boolean:
             if x == n - 1:
                 break
         else:
-            # print(f'a = {a}, a**d mod n ... {a}**{d} mod {n}')
             return False
     return True
 
